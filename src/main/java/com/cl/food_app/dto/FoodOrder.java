@@ -2,13 +2,12 @@ package com.cl.food_app.dto;
 
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 @Entity
 public class FoodOrder {
@@ -18,7 +17,7 @@ public class FoodOrder {
 //	@Column(name = "food_Order_Id")
 	private int id;
 	private String customerName;
-	private String customeremail;
+	private String customerEmail;
 	private int totalPrice;
 	private int quantity;
 	private String status;
@@ -29,7 +28,7 @@ public class FoodOrder {
 	@ManyToOne
 	private Staff staff;
 	
-	@OneToMany
+	@ManyToMany
 	private List<Item> items;
 
 	public List<Item> getItems() {
@@ -64,12 +63,12 @@ public class FoodOrder {
 		this.customerName = customerName;
 	}
 
-	public String getCustomeremail() {
-		return customeremail;
+	public String getCustomerEmail() {
+		return customerEmail;
 	}
 
-	public void setCustomeremail(String customeremail) {
-		this.customeremail = customeremail;
+	public void setCustomerEmail(String customerEmail) {
+		this.customerEmail = customerEmail;
 	}
 
 	public int getTotalPrice() {
