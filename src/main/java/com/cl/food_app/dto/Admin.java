@@ -1,6 +1,5 @@
 package com.cl.food_app.dto;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -48,5 +47,5 @@ public class Admin {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 }

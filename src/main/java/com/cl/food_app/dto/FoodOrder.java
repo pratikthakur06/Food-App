@@ -3,6 +3,7 @@ package com.cl.food_app.dto;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,11 +25,11 @@ public class FoodOrder {
 	private long customerPhoneNumber;
 	private String orderCreatedTime;
 	private String orderDeliveredTime;
-	
+
 	@ManyToOne
 	private Staff staff;
-	
-	@ManyToMany
+
+	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Item> items;
 
 	public List<Item> getItems() {
@@ -118,5 +119,5 @@ public class FoodOrder {
 	public void setOrderDeliveredTime(String orderDeliveredTime) {
 		this.orderDeliveredTime = orderDeliveredTime;
 	}
-	
+
 }

@@ -1,6 +1,6 @@
 package com.cl.food_app.dto;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,10 +14,10 @@ public class Menu {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 //	@Column(name = "menu_Id")
 	private int id;
-	
-	@ManyToOne
+
+	@ManyToOne(cascade = CascadeType.ALL)
 	private BranchManager branchManager;
-	
+
 	public BranchManager getBranchManager() {
 		return branchManager;
 	}
@@ -33,5 +33,5 @@ public class Menu {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 }

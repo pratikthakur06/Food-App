@@ -29,11 +29,11 @@ public class AdminDao {
 			return repository.save(admin);
 		}
 	}
-	
+
 	// Get By Id
-		public Optional<Admin> getAdminById(int id) {
-			return repository.findById(id);
-		}
+	public Optional<Admin> getAdminById(int id) {
+		return repository.findById(id);
+	}
 
 	// Delete
 	public Admin deleteAdmin(int id) {

@@ -1,6 +1,6 @@
 package com.cl.food_app.dto;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,8 +17,8 @@ public class BranchManager {
 	private String name;
 	private String email;
 	private String password;
-	
-	@OneToOne
+
+	@OneToOne(cascade = CascadeType.ALL)
 	private Branch branch;
 
 	public Branch getBranch() {

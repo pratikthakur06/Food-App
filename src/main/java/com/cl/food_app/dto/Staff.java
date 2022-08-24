@@ -1,6 +1,6 @@
 package com.cl.food_app.dto;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,10 +17,9 @@ public class Staff {
 	private String name;
 	private String email;
 	private String password;
-	
-	@ManyToOne
+
+	@ManyToOne(cascade = CascadeType.ALL)
 	private BranchManager branchManager;
-	
 
 	public BranchManager getBranchManager() {
 		return branchManager;
