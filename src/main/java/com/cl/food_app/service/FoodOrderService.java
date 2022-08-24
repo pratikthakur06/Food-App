@@ -3,6 +3,8 @@ package com.cl.food_app.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,9 @@ public class FoodOrderService {
 
 	@Autowired
 	private ItemDao itemDao;
+	
+	@Autowired
+	private EmailSenderService emailSenderService;
 
 	public ResponseEntity<ResponseStructure<FoodOrder>> saveFoodOrder(FoodOrder foodOrder, List<Integer> itemIds,
 			int staffId) {
@@ -47,6 +52,25 @@ public class FoodOrderService {
 		structure.setMessage("Food Order Saved Successfully");
 		structure.setStatus(HttpStatus.CREATED.value());
 		structure.setT(dao.saveFoodOrder(foodOrder));
+		String attachment = "C:\\Users\\U6070527\\OneDrive - Clarivate Analytics\\Desktop\\food_image.jpg";
+		String body = "Hi "+structure.getT().getCustomerName()+",\n\n"
+					+"Your order has been placed successfully. \n\n"
+					+"Order Details :- \n\n";
+		for(Item item:items) {
+			body+="Item Name- "+item.getName()+", Item Type- "+item.getType()+", Item Price- "+item.getPrice()+"\n";
+		}
+		body+="Order Status- "+foodOrder.getStatus()+"\n"
+				+"Total Amount- "+foodOrder.getTotalPrice()+"\n\n"
+				+"If you need any support, please reach out to us on "+foodOrder.getStaff().getEmail()+" or "+foodOrder.getStaff().getBranchManager().getEmail()+"."+"\n\n"
+				+"Thank you for choosing Food App, we are always there to fulfil your craving anytime!!!"+"\n\n"
+				+"Regards,\n"+"Team Food App";
+		String subject = "Food Ordered Successfully";
+		try {
+			emailSenderService.sendMailWithAttachment(structure.getT().getCustomerEmail(), body, subject, attachment);
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return new ResponseEntity<ResponseStructure<FoodOrder>>(structure, HttpStatus.CREATED);
 	}
 
