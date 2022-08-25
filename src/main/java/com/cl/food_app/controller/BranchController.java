@@ -23,17 +23,17 @@ public class BranchController {
 	@Autowired
 	private BranchService service;
 
-	@PostMapping("/saveBranch/{adminId}")
+	@PostMapping("/branch/{adminId}")
 	public ResponseEntity<ResponseStructure<Branch>> saveBranch(@RequestBody Branch branch, @PathVariable int adminId) {
 		return service.saveBranch(branch, adminId);
 	}
 
-	@PutMapping("/updateBranch")
+	@PutMapping("/branch")
 	public ResponseEntity<ResponseStructure<Branch>> updateBranch(@RequestBody Branch branch, @RequestParam int id) {
 		return service.updateBranch(branch, id);
 	}
 
-	@DeleteMapping("/deleteBranch/{branchId}")
+	@DeleteMapping("/branch/{branchId}")
 	public ResponseEntity<ResponseStructure<Branch>> deleteBranch(@PathVariable int branchId) {
 		return service.deleteBranch(branchId);
 	}

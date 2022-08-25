@@ -23,17 +23,17 @@ public class ItemController {
 	@Autowired
 	private ItemService service;
 
-	@PostMapping("/saveItem/{menuId}")
+	@PostMapping("/item/{menuId}")
 	public ResponseEntity<ResponseStructure<Item>> saveItem(@RequestBody Item item, @PathVariable int menuId) {
 		return service.saveItem(item, menuId);
 	}
 
-	@PutMapping("/updateItem")
+	@PutMapping("/item")
 	public ResponseEntity<ResponseStructure<Item>> updateItem(@RequestBody Item item, @RequestParam int id) {
 		return service.updateItem(item, id);
 	}
 
-	@DeleteMapping("/deleteItem/{itemId}")
+	@DeleteMapping("/item/{itemId}")
 	public ResponseEntity<ResponseStructure<Item>> deleteItem(@PathVariable int itemId) {
 		return service.deleteItem(itemId);
 	}

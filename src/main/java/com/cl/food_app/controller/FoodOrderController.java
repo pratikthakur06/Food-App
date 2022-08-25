@@ -23,19 +23,19 @@ public class FoodOrderController {
 	@Autowired
 	private FoodOrderService service;
 
-	@PostMapping("/saveFoodOrder")
+	@PostMapping("/foodOrder")
 	public ResponseEntity<ResponseStructure<FoodOrder>> saveFoodOrder(@RequestBody FoodOrder foodOrder,
 			@RequestParam("items") List<Integer> itemIds, @RequestParam("staffId") int staffId) {
 		return service.saveFoodOrder(foodOrder, itemIds, staffId);
 	}
 
-	@PutMapping("/updateFoodOrder")
+	@PutMapping("/foodOrder")
 	public ResponseEntity<ResponseStructure<FoodOrder>> updateFoodOrder(@RequestBody FoodOrder foodOrder,
 			@RequestParam("items") List<Integer> itemIds, @RequestParam int id) {
 		return service.updateFoodOrder(foodOrder, itemIds, id);
 	}
 
-	@DeleteMapping("/deleteFoodOrder/{foodOrderId}")
+	@DeleteMapping("/foodOrder/{foodOrderId}")
 	public ResponseEntity<ResponseStructure<FoodOrder>> deleteFoodOrder(@PathVariable int foodOrderId) {
 		return service.deleteFoodOrder(foodOrderId);
 	}

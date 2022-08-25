@@ -23,18 +23,18 @@ public class MenuController {
 	@Autowired
 	private MenuService service;
 
-	@PostMapping("/saveMenu/{branchManagerId}")
+	@PostMapping("/menu/{branchManagerId}")
 	public ResponseEntity<ResponseStructure<Menu>> saveMenu(@RequestBody Menu menu, @PathVariable int branchManagerId) {
 		return service.saveMenu(menu, branchManagerId);
 	}
 
 	// There is no need for updating the menu table
-	@PutMapping("/updateMenu")
+	@PutMapping("/menu")
 	public ResponseEntity<ResponseStructure<Menu>> updateMenu(@RequestBody Menu menu, @RequestParam int id) {
 		return service.updateMenu(menu, id);
 	}
 
-	@DeleteMapping("/deleteMenu/{menuId}")
+	@DeleteMapping("/menu/{menuId}")
 	public ResponseEntity<ResponseStructure<Menu>> deleteMenu(@PathVariable int menuId) {
 		return service.deleteMenu(menuId);
 	}

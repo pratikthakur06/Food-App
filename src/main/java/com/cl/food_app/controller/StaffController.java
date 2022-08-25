@@ -23,18 +23,18 @@ public class StaffController {
 	@Autowired
 	private StaffService service;
 
-	@PostMapping("/saveStaff/{branchManagerId}")
+	@PostMapping("/staff/{branchManagerId}")
 	public ResponseEntity<ResponseStructure<Staff>> saveStaff(@RequestBody Staff staff,
 			@PathVariable int branchManagerId) {
 		return service.saveStaff(staff, branchManagerId);
 	}
 
-	@PutMapping("/updateStaff")
+	@PutMapping("/staff")
 	public ResponseEntity<ResponseStructure<Staff>> updateStaff(@RequestBody Staff staff, @RequestParam int id) {
 		return service.updateStaff(staff, id);
 	}
 
-	@DeleteMapping("/deleteStaff/{staffId}")
+	@DeleteMapping("/staff/{staffId}")
 	public ResponseEntity<ResponseStructure<Staff>> deleteStaff(@PathVariable int staffId) {
 		return service.deleteStaff(staffId);
 	}

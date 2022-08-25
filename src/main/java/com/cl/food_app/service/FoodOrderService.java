@@ -16,7 +16,7 @@ import com.cl.food_app.dao.StaffDao;
 import com.cl.food_app.dto.FoodOrder;
 import com.cl.food_app.dto.Item;
 import com.cl.food_app.dto.Staff;
-import com.cl.food_app.exception.IdNotFoundException;
+import com.cl.food_app.exception.FoodOrderNotFoundException;
 import com.cl.food_app.util.ResponseStructure;
 
 @Service
@@ -30,7 +30,7 @@ public class FoodOrderService {
 
 	@Autowired
 	private ItemDao itemDao;
-	
+
 	@Autowired
 	private EmailSenderService emailSenderService;
 
@@ -53,17 +53,17 @@ public class FoodOrderService {
 		structure.setStatus(HttpStatus.CREATED.value());
 		structure.setT(dao.saveFoodOrder(foodOrder));
 		String attachment = "C:\\Users\\U6070527\\OneDrive - Clarivate Analytics\\Desktop\\food_image.jpg";
-		String body = "Hi "+structure.getT().getCustomerName()+",\n\n"
-					+"Your order has been placed successfully. \n\n"
-					+"Order Details :- \n\n";
-		for(Item item:items) {
-			body+="Item Name- "+item.getName()+", Item Type- "+item.getType()+", Item Price- "+item.getPrice()+"\n";
+		String body = "Hi " + structure.getT().getCustomerName() + ",\n\n"
+				+ "Your order has been placed successfully. \n\n" + "Order Details :- \n\n";
+		for (Item item : items) {
+			body += "Item Name- " + item.getName() + ", Item Type- " + item.getType() + ", Item Price- "
+					+ item.getPrice() + "\n";
 		}
-		body+="Order Status- "+foodOrder.getStatus()+"\n"
-				+"Total Amount- "+foodOrder.getTotalPrice()+"\n\n"
-				+"If you need any support, please reach out to us on "+foodOrder.getStaff().getEmail()+" or "+foodOrder.getStaff().getBranchManager().getEmail()+"."+"\n\n"
-				+"Thank you for choosing Food App, we are always there to fulfil your craving anytime!!!"+"\n\n"
-				+"Regards,\n"+"Team Food App";
+		body += "Order Status- " + foodOrder.getStatus() + "\n" + "Total Amount- " + foodOrder.getTotalPrice() + "\n\n"
+				+ "If you need any support, please reach out to us on " + foodOrder.getStaff().getEmail() + " or "
+				+ foodOrder.getStaff().getBranchManager().getEmail() + "." + "\n\n"
+				+ "Thank you for choosing Food App, we are always there to fulfil your craving anytime!!!" + "\n\n"
+				+ "Regards,\n" + "Team Food App";
 		String subject = "Food Ordered Successfully";
 		try {
 			emailSenderService.sendMailWithAttachment(structure.getT().getCustomerEmail(), body, subject, attachment);
@@ -77,7 +77,7 @@ public class FoodOrderService {
 	public ResponseEntity<ResponseStructure<FoodOrder>> getFoodOrderById(int id) {
 		FoodOrder foodOrder = dao.getFoodOrderById(id).get();
 		if (foodOrder == null) {
-			throw new IdNotFoundException();
+			throw new FoodOrderNotFoundException(id);
 		} else {
 			ResponseStructure<FoodOrder> structure = new ResponseStructure<FoodOrder>();
 			structure.setMessage("Food Order Found Successfully");
@@ -119,7 +119,7 @@ public class FoodOrderService {
 			structure.setT(dao.deleteFoodOrder(id));
 			return new ResponseEntity<ResponseStructure<FoodOrder>>(structure, HttpStatus.OK);
 		} else {
-			throw new IdNotFoundException();
+			throw new FoodOrderNotFoundException(id);
 		}
 	}
 

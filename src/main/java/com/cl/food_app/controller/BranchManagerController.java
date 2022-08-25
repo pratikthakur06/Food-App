@@ -23,19 +23,19 @@ public class BranchManagerController {
 	@Autowired
 	private BranchManagerService service;
 
-	@PostMapping("/saveBranchManager/{branchId}")
+	@PostMapping("/branchManager/{branchId}")
 	public ResponseEntity<ResponseStructure<BranchManager>> saveBranchManager(@RequestBody BranchManager branchManager,
 			@PathVariable int branchId) {
 		return service.saveBranchManager(branchManager, branchId);
 	}
 
-	@PutMapping("/updateBranchManager")
+	@PutMapping("/branchManager")
 	public ResponseEntity<ResponseStructure<BranchManager>> updateBranchManager(
 			@RequestBody BranchManager branchManager, @RequestParam int id) {
 		return service.updateBranchManager(branchManager, id);
 	}
 
-	@DeleteMapping("/deleteBranchManager/{branchManagerId}")
+	@DeleteMapping("/branchManager/{branchManagerId}")
 	public ResponseEntity<ResponseStructure<BranchManager>> deleteBranchManager(@PathVariable int branchManagerId) {
 		return service.deleteBranchManager(branchManagerId);
 	}

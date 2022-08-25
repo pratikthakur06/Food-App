@@ -23,17 +23,17 @@ public class AdminController {
 	@Autowired
 	AdminService service;
 
-	@PostMapping("/saveAdmin")
+	@PostMapping("/admin")
 	public ResponseEntity<ResponseStructure<Admin>> saveAdmin(@RequestBody Admin admin) {
 		return service.saveAdmin(admin);
 	}
 
-	@PutMapping("/updateAdmin")
+	@PutMapping("/admin")
 	public ResponseEntity<ResponseStructure<Admin>> updateAdmin(@RequestBody Admin admin, @RequestParam int id) {
 		return service.updateAdmin(admin, id);
 	}
 
-	@DeleteMapping("/deleteAdmin")
+	@DeleteMapping("/admin")
 	public ResponseEntity<ResponseStructure<Admin>> deleteAdmin(@RequestParam int id) {
 		return service.deleteAdmin(id);
 	}
