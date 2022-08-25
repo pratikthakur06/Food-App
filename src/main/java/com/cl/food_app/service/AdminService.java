@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.cl.food_app.dao.AdminDao;
 import com.cl.food_app.dto.Admin;
+import com.cl.food_app.exception.AdminNotFoundException;
 import com.cl.food_app.exception.IdNotFoundException;
 import com.cl.food_app.util.AES;
 import com.cl.food_app.util.ResponseStructure;
@@ -42,17 +43,14 @@ public class AdminService {
 			structure.setT(dao.saveAdmin(admin2));
 			return new ResponseEntity<ResponseStructure<Admin>>(structure, HttpStatus.OK);
 		} else {
-			structure.setMessage("ID is not valid");
-			structure.setStatus(HttpStatus.NOT_FOUND.value());
-			structure.setT(null);
-			return new ResponseEntity<ResponseStructure<Admin>>(structure, HttpStatus.NOT_FOUND);
+			throw new AdminNotFoundException(id);
 		}
 	}
 
 	public ResponseEntity<ResponseStructure<Admin>> getAdminById(int id) {
 		Optional<Admin> optional = dao.getAdminById(id);
 		if (optional.isEmpty()) {
-			throw new IdNotFoundException();
+			throw new AdminNotFoundException(id);
 		} else {
 			ResponseStructure<Admin> structure = new ResponseStructure<Admin>();
 			structure.setMessage("Admin Found Successfully");
@@ -64,14 +62,14 @@ public class AdminService {
 
 	public ResponseEntity<ResponseStructure<Admin>> deleteAdmin(int id) {
 		ResponseStructure<Admin> structure = new ResponseStructure<Admin>();
-		Admin admin = dao.getAdminById(id).get();
-		if (admin != null) {
+		Optional<Admin> admin = dao.getAdminById(id);
+		if (admin.isPresent()) {
 			structure.setMessage("Admin Deleted Successfully");
 			structure.setStatus(HttpStatus.OK.value());
 			structure.setT(dao.deleteAdmin(id));
 			return new ResponseEntity<ResponseStructure<Admin>>(structure, HttpStatus.OK);
 		} else {
-			throw new IdNotFoundException();
+			throw new AdminNotFoundException(id);
 		}
 	}
 

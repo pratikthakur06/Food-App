@@ -1,6 +1,7 @@
 package com.cl.food_app.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import com.cl.food_app.dao.StaffDao;
 import com.cl.food_app.dto.BranchManager;
 import com.cl.food_app.dto.Staff;
 import com.cl.food_app.exception.IdNotFoundException;
+import com.cl.food_app.exception.StaffNotFoundException;
 import com.cl.food_app.util.AES;
 import com.cl.food_app.util.ResponseStructure;
 
@@ -39,14 +41,14 @@ public class StaffService {
 	}
 
 	public ResponseEntity<ResponseStructure<Staff>> getStaffById(int id) {
-		Staff staff = dao.getStaffById(id).get();
-		if (staff == null) {
-			throw new IdNotFoundException();
+		Optional<Staff> staff = dao.getStaffById(id);
+		if (staff.isEmpty()) {
+			throw new StaffNotFoundException(id);
 		} else {
 			ResponseStructure<Staff> structure = new ResponseStructure<Staff>();
 			structure.setMessage("Staff Found Successfully");
 			structure.setStatus(HttpStatus.OK.value());
-			structure.setT(staff);
+			structure.setT(staff.get());
 			return new ResponseEntity<ResponseStructure<Staff>>(structure, HttpStatus.OK);
 		}
 	}
@@ -61,23 +63,20 @@ public class StaffService {
 			structure.setT(dao.saveStaff(staff2));
 			return new ResponseEntity<ResponseStructure<Staff>>(structure, HttpStatus.OK);
 		} else {
-			structure.setMessage("ID is not valid");
-			structure.setStatus(HttpStatus.NOT_FOUND.value());
-			structure.setT(null);
-			return new ResponseEntity<ResponseStructure<Staff>>(structure, HttpStatus.NOT_FOUND);
+			throw new StaffNotFoundException(id);
 		}
 	}
 
 	public ResponseEntity<ResponseStructure<Staff>> deleteStaff(int id) {
 		ResponseStructure<Staff> structure = new ResponseStructure<Staff>();
-		Staff staff = dao.getStaffById(id).get();
-		if (staff != null) {
+		Optional<Staff> staff = dao.getStaffById(id);
+		if (staff.isPresent()) {
 			structure.setMessage("Staff Deleted Successfully");
 			structure.setStatus(HttpStatus.OK.value());
 			structure.setT(dao.deleteStaff(id));
 			return new ResponseEntity<ResponseStructure<Staff>>(structure, HttpStatus.OK);
 		} else {
-			throw new IdNotFoundException();
+			throw new StaffNotFoundException(id);
 		}
 	}
 

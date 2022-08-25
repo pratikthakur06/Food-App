@@ -2,6 +2,7 @@ package com.cl.food_app.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.mail.MessagingException;
 
@@ -75,14 +76,14 @@ public class FoodOrderService {
 	}
 
 	public ResponseEntity<ResponseStructure<FoodOrder>> getFoodOrderById(int id) {
-		FoodOrder foodOrder = dao.getFoodOrderById(id).get();
-		if (foodOrder == null) {
+		Optional<FoodOrder> foodOrder = dao.getFoodOrderById(id);
+		if (foodOrder.isEmpty()) {
 			throw new FoodOrderNotFoundException(id);
 		} else {
 			ResponseStructure<FoodOrder> structure = new ResponseStructure<FoodOrder>();
 			structure.setMessage("Food Order Found Successfully");
 			structure.setStatus(HttpStatus.OK.value());
-			structure.setT(foodOrder);
+			structure.setT(foodOrder.get());
 			return new ResponseEntity<ResponseStructure<FoodOrder>>(structure, HttpStatus.OK);
 		}
 	}
@@ -103,7 +104,7 @@ public class FoodOrderService {
 			foodOrder2.setTotalPrice(totalPrice);
 			structure.setMessage("Item Updated Successfully");
 			structure.setStatus(HttpStatus.OK.value());
-			structure.setT(dao.saveFoodOrder(foodOrder2));
+			structure.setT(dao.updateFoodOrder(foodOrder2,id));
 			return new ResponseEntity<ResponseStructure<FoodOrder>>(structure, HttpStatus.OK);
 		} else {
 			structure.setMessage("ID is not valid");
@@ -115,8 +116,8 @@ public class FoodOrderService {
 
 	public ResponseEntity<ResponseStructure<FoodOrder>> deleteFoodOrder(int id) {
 		ResponseStructure<FoodOrder> structure = new ResponseStructure<FoodOrder>();
-		FoodOrder foodOrder = dao.getFoodOrderById(id).get();
-		if (foodOrder != null) {
+		Optional<FoodOrder> foodOrder = dao.getFoodOrderById(id);
+		if (foodOrder.isPresent()) {
 			structure.setMessage("Food Order Deleted Successfully");
 			structure.setStatus(HttpStatus.OK.value());
 			structure.setT(dao.deleteFoodOrder(id));

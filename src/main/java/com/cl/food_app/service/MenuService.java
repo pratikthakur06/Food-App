@@ -1,6 +1,7 @@
 package com.cl.food_app.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import com.cl.food_app.dao.MenuDao;
 import com.cl.food_app.dto.BranchManager;
 import com.cl.food_app.dto.Menu;
 import com.cl.food_app.exception.IdNotFoundException;
+import com.cl.food_app.exception.MenuNotFoundException;
 import com.cl.food_app.util.ResponseStructure;
 
 @Service
@@ -34,14 +36,14 @@ public class MenuService {
 	}
 
 	public ResponseEntity<ResponseStructure<Menu>> getMenuById(int id) {
-		Menu menu = dao.getMenuById(id).get();
-		if (menu == null) {
-			throw new IdNotFoundException();
+		Optional<Menu> menu = dao.getMenuById(id);
+		if (menu.isEmpty()) {
+			throw new MenuNotFoundException(id);
 		} else {
 			ResponseStructure<Menu> structure = new ResponseStructure<Menu>();
 			structure.setMessage("Menu Found Successfully");
 			structure.setStatus(HttpStatus.OK.value());
-			structure.setT(menu);
+			structure.setT(menu.get());
 			return new ResponseEntity<ResponseStructure<Menu>>(structure, HttpStatus.OK);
 		}
 	}
@@ -55,23 +57,20 @@ public class MenuService {
 			structure.setT(dao.saveMenu(menu2));
 			return new ResponseEntity<ResponseStructure<Menu>>(structure, HttpStatus.OK);
 		} else {
-			structure.setMessage("ID is not valid");
-			structure.setStatus(HttpStatus.NOT_FOUND.value());
-			structure.setT(null);
-			return new ResponseEntity<ResponseStructure<Menu>>(structure, HttpStatus.NOT_FOUND);
+			throw new MenuNotFoundException(id);
 		}
 	}
 
 	public ResponseEntity<ResponseStructure<Menu>> deleteMenu(int id) {
 		ResponseStructure<Menu> structure = new ResponseStructure<Menu>();
-		Menu menu = dao.getMenuById(id).get();
-		if (menu != null) {
+		Optional<Menu> menu = dao.getMenuById(id);
+		if (menu.isPresent()) {
 			structure.setMessage("Menu Deleted Successfully");
 			structure.setStatus(HttpStatus.OK.value());
 			structure.setT(dao.deleteMenu(id));
 			return new ResponseEntity<ResponseStructure<Menu>>(structure, HttpStatus.OK);
 		} else {
-			throw new IdNotFoundException();
+			throw new MenuNotFoundException(id);
 		}
 	}
 

@@ -1,6 +1,7 @@
 package com.cl.food_app.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import com.cl.food_app.dao.MenuDao;
 import com.cl.food_app.dto.Item;
 import com.cl.food_app.dto.Menu;
 import com.cl.food_app.exception.IdNotFoundException;
+import com.cl.food_app.exception.ItemNotFoundException;
 import com.cl.food_app.util.ResponseStructure;
 
 @Service
@@ -34,14 +36,14 @@ public class ItemService {
 	}
 
 	public ResponseEntity<ResponseStructure<Item>> getItemById(int id) {
-		Item item = dao.getItemById(id).get();
-		if (item == null) {
-			throw new IdNotFoundException();
+		Optional<Item> item = dao.getItemById(id);
+		if (item.isEmpty()) {
+			throw new ItemNotFoundException(id);
 		} else {
 			ResponseStructure<Item> structure = new ResponseStructure<Item>();
 			structure.setMessage("Item Found Successfully");
 			structure.setStatus(HttpStatus.OK.value());
-			structure.setT(item);
+			structure.setT(item.get());
 			return new ResponseEntity<ResponseStructure<Item>>(structure, HttpStatus.OK);
 		}
 	}
@@ -55,23 +57,20 @@ public class ItemService {
 			structure.setT(dao.saveItem(item2));
 			return new ResponseEntity<ResponseStructure<Item>>(structure, HttpStatus.OK);
 		} else {
-			structure.setMessage("ID is not valid");
-			structure.setStatus(HttpStatus.NOT_FOUND.value());
-			structure.setT(null);
-			return new ResponseEntity<ResponseStructure<Item>>(structure, HttpStatus.NOT_FOUND);
+			throw new ItemNotFoundException(id);
 		}
 	}
 
 	public ResponseEntity<ResponseStructure<Item>> deleteItem(int id) {
 		ResponseStructure<Item> structure = new ResponseStructure<Item>();
-		Item item = dao.getItemById(id).get();
-		if (item != null) {
+		Optional<Item> item = dao.getItemById(id);
+		if (item.isPresent()) {
 			structure.setMessage("Item Deleted Successfully");
 			structure.setStatus(HttpStatus.OK.value());
 			structure.setT(dao.deleteItem(id));
 			return new ResponseEntity<ResponseStructure<Item>>(structure, HttpStatus.OK);
 		} else {
-			throw new IdNotFoundException();
+			throw new ItemNotFoundException(id);
 		}
 	}
 

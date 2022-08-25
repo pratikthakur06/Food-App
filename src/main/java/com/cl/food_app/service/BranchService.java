@@ -1,6 +1,7 @@
 package com.cl.food_app.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import com.cl.food_app.dao.AdminDao;
 import com.cl.food_app.dao.BranchDao;
 import com.cl.food_app.dto.Admin;
 import com.cl.food_app.dto.Branch;
+import com.cl.food_app.exception.BranchNotFoundException;
 import com.cl.food_app.exception.IdNotFoundException;
 import com.cl.food_app.util.ResponseStructure;
 
@@ -34,14 +36,14 @@ public class BranchService {
 	}
 
 	public ResponseEntity<ResponseStructure<Branch>> getBranchById(int id) {
-		Branch branch = dao.getBranchById(id).get();
-		if (branch == null) {
-			throw new IdNotFoundException();
+		Optional<Branch> branch = dao.getBranchById(id);
+		if (branch.isEmpty()) {
+			throw new BranchNotFoundException(id);
 		} else {
 			ResponseStructure<Branch> structure = new ResponseStructure<Branch>();
 			structure.setMessage("Branch Found Successfully");
 			structure.setStatus(HttpStatus.OK.value());
-			structure.setT(branch);
+			structure.setT(branch.get());
 			return new ResponseEntity<ResponseStructure<Branch>>(structure, HttpStatus.OK);
 		}
 	}
@@ -55,23 +57,20 @@ public class BranchService {
 			structure.setT(dao.saveBranch(branch2));
 			return new ResponseEntity<ResponseStructure<Branch>>(structure, HttpStatus.OK);
 		} else {
-			structure.setMessage("ID is not valid");
-			structure.setStatus(HttpStatus.NOT_FOUND.value());
-			structure.setT(null);
-			return new ResponseEntity<ResponseStructure<Branch>>(structure, HttpStatus.NOT_FOUND);
+			throw new BranchNotFoundException(id);
 		}
 	}
 
 	public ResponseEntity<ResponseStructure<Branch>> deleteBranch(int id) {
 		ResponseStructure<Branch> structure = new ResponseStructure<Branch>();
-		Branch branch = dao.getBranchById(id).get();
-		if (branch != null) {
+		Optional<Branch> branch = dao.getBranchById(id);
+		if (branch.isPresent()) {
 			structure.setMessage("Branch Deleted Successfully");
 			structure.setStatus(HttpStatus.OK.value());
 			structure.setT(dao.deleteBranch(id));
 			return new ResponseEntity<ResponseStructure<Branch>>(structure, HttpStatus.OK);
 		} else {
-			throw new IdNotFoundException();
+			throw new BranchNotFoundException(id);
 		}
 	}
 

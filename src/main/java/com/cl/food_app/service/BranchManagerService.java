@@ -1,6 +1,7 @@
 package com.cl.food_app.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import com.cl.food_app.dao.BranchDao;
 import com.cl.food_app.dao.BranchManagerDao;
 import com.cl.food_app.dto.Branch;
 import com.cl.food_app.dto.BranchManager;
+import com.cl.food_app.exception.BranchManagerNotFoundException;
 import com.cl.food_app.exception.IdNotFoundException;
 import com.cl.food_app.util.AES;
 import com.cl.food_app.util.ResponseStructure;
@@ -40,14 +42,14 @@ public class BranchManagerService {
 	}
 
 	public ResponseEntity<ResponseStructure<BranchManager>> getBranchManagerById(int id) {
-		BranchManager branchManager = dao.getBranchManagerById(id).get();
-		if (branchManager == null) {
-			throw new IdNotFoundException();
+		Optional<BranchManager> branchManager = dao.getBranchManagerById(id);
+		if (branchManager.isEmpty()) {
+			throw new BranchManagerNotFoundException(id);
 		} else {
 			ResponseStructure<BranchManager> structure = new ResponseStructure<BranchManager>();
 			structure.setMessage("Branch Manager Found Successfully");
 			structure.setStatus(HttpStatus.OK.value());
-			structure.setT(branchManager);
+			structure.setT(branchManager.get());
 			return new ResponseEntity<ResponseStructure<BranchManager>>(structure, HttpStatus.OK);
 		}
 	}
@@ -62,23 +64,20 @@ public class BranchManagerService {
 			structure.setT(dao.saveBranchManager(branchManager2));
 			return new ResponseEntity<ResponseStructure<BranchManager>>(structure, HttpStatus.OK);
 		} else {
-			structure.setMessage("ID is not valid");
-			structure.setStatus(HttpStatus.NOT_FOUND.value());
-			structure.setT(null);
-			return new ResponseEntity<ResponseStructure<BranchManager>>(structure, HttpStatus.NOT_FOUND);
+			throw new BranchManagerNotFoundException(id);
 		}
 	}
 
 	public ResponseEntity<ResponseStructure<BranchManager>> deleteBranchManager(int id) {
 		ResponseStructure<BranchManager> structure = new ResponseStructure<BranchManager>();
-		BranchManager branchManager = dao.getBranchManagerById(id).get();
-		if (branchManager != null) {
+		Optional<BranchManager> branchManager = dao.getBranchManagerById(id);
+		if (branchManager.isPresent()) {
 			structure.setMessage("Branch Deleted Successfully");
 			structure.setStatus(HttpStatus.OK.value());
 			structure.setT(dao.deleteBranchManager(id));
 			return new ResponseEntity<ResponseStructure<BranchManager>>(structure, HttpStatus.OK);
 		} else {
-			throw new IdNotFoundException();
+			throw new BranchManagerNotFoundException(id);
 		}
 	}
 

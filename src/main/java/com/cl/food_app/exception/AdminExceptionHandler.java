@@ -9,14 +9,14 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.cl.food_app.util.ResponseStructure;
 
 @ControllerAdvice
-public class FoodOrderExceptionHandler extends ResponseEntityExceptionHandler {
+public class AdminExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@ExceptionHandler(FoodOrderNotFoundException.class)
-	public ResponseEntity<ResponseStructure<String>> foodOrderNotFoundException(FoodOrderNotFoundException exception) {
+	@ExceptionHandler(AdminNotFoundException.class)
+	public ResponseEntity<ResponseStructure<String>> adminNotFoundExceptionEntity(AdminNotFoundException exception) {
 		ResponseStructure<String> structure = new ResponseStructure<String>();
-		structure.setMessage("Food Order With Id "+exception.id +" Not Found In Database");
+		structure.setMessage("Admin With Id "+exception.id +" Not Found In Database");
 		structure.setStatus(HttpStatus.NOT_FOUND.value());
-		structure.setT("No Such Food Order Id Found");
+		structure.setT("No Such Admin Id Found");
 		return new ResponseEntity<ResponseStructure<String>>(structure, HttpStatus.NOT_FOUND);
 	}
 }
