@@ -99,8 +99,11 @@ public class FoodOrderService {
 				totalPrice += item.getPrice();
 				items.add(item);
 			}
-			foodOrder.setItems(items);
-			foodOrder.setTotalPrice(totalPrice);
+			foodOrder2.setItems(items);
+			foodOrder2.setTotalPrice(totalPrice);
+			structure.setMessage("Item Updated Successfully");
+			structure.setStatus(HttpStatus.OK.value());
+			structure.setT(dao.saveFoodOrder(foodOrder2));
 			return new ResponseEntity<ResponseStructure<FoodOrder>>(structure, HttpStatus.OK);
 		} else {
 			structure.setMessage("ID is not valid");
