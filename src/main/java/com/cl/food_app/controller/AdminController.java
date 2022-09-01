@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ import com.cl.food_app.service.AdminService;
 import com.cl.food_app.util.ResponseStructure;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200/")
 public class AdminController {
 
 	@Autowired
@@ -26,6 +28,11 @@ public class AdminController {
 	@PostMapping("/admin")
 	public ResponseEntity<ResponseStructure<Admin>> saveAdmin(@RequestBody Admin admin) {
 		return service.saveAdmin(admin);
+	}
+	
+	@PostMapping("/adminLogin")
+	public ResponseEntity<ResponseStructure<Admin>> loginAdmin(@RequestBody Admin admin) {
+		return service.loginAdmin(admin);
 	}
 
 	@PutMapping("/admin")

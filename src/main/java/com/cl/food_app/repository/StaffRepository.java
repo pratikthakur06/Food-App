@@ -6,4 +6,5 @@ import com.cl.food_app.dto.Staff;
 
 public interface StaffRepository extends JpaRepository<Staff, Integer> {
 
+	public Staff findStaffByEmailAndPassword(String email, String password);
 }

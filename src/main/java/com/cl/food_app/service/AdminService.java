@@ -33,6 +33,24 @@ public class AdminService {
 		return new ResponseEntity<ResponseStructure<Admin>>(structure, HttpStatus.CREATED);
 	}
 
+	public ResponseEntity<ResponseStructure<Admin>> loginAdmin(Admin admin) {
+		admin.setPassword(aes.encrypt(admin.getPassword(), "secretpratik"));
+		Admin admin2 = dao.loginAdmin(admin);
+		ResponseStructure<Admin> structure = new ResponseStructure<Admin>();
+		if (admin2 == null) {
+			structure.setMessage("Admin Not Found!!");
+			structure.setStatus(HttpStatus.NOT_FOUND.value());
+			structure.setT(null);
+			return new ResponseEntity<ResponseStructure<Admin>>(structure, HttpStatus.NOT_FOUND);
+		} else {
+			admin2.setPassword(aes.decrypt(admin2.getPassword(), "secretpratik"));
+			structure.setMessage("Admin Logged In Successfully");
+			structure.setStatus(HttpStatus.OK.value());
+			structure.setT(admin2);
+			return new ResponseEntity<ResponseStructure<Admin>>(structure, HttpStatus.OK);
+		}
+	}
+
 	public ResponseEntity<ResponseStructure<Admin>> updateAdmin(Admin admin, int id) {
 		ResponseStructure<Admin> structure = new ResponseStructure<Admin>();
 		Admin admin2 = dao.updateAdmin(admin, id);
@@ -75,7 +93,7 @@ public class AdminService {
 
 	public ResponseEntity<ResponseStructure<List<Admin>>> findAllAdmin() {
 		ResponseStructure<List<Admin>> structure = new ResponseStructure<List<Admin>>();
-		structure.setMessage("Employee Found Successfully");
+		structure.setMessage("Admin Found Successfully");
 		structure.setStatus(HttpStatus.OK.value());
 		structure.setT(dao.findAllAdmin());
 		return new ResponseEntity<ResponseStructure<List<Admin>>>(structure, HttpStatus.OK);

@@ -19,6 +19,10 @@ public class StaffDao {
 	public Staff saveStaff(Staff staff) {
 		return repository.save(staff);
 	}
+	
+	public Staff loginStaff(Staff staff) {
+		return repository.findStaffByEmailAndPassword(staff.getEmail(), staff.getPassword());
+	}
 
 	public Optional<Staff> getStaffById(int id) {
 		return repository.findById(id);

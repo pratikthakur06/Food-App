@@ -76,7 +76,7 @@ public class ItemService {
 
 	public ResponseEntity<ResponseStructure<List<Item>>> findAllItem() {
 		ResponseStructure<List<Item>> structure = new ResponseStructure<List<Item>>();
-		structure.setMessage("Menu Found Successfully");
+		structure.setMessage("Item Found Successfully");
 		structure.setStatus(HttpStatus.OK.value());
 		structure.setT(dao.findAllItem());
 		return new ResponseEntity<ResponseStructure<List<Item>>>(structure, HttpStatus.OK);

@@ -6,4 +6,5 @@ import com.cl.food_app.dto.BranchManager;
 
 public interface BranchManagerRepository extends JpaRepository<BranchManager, Integer> {
 
+	public BranchManager findBranchManagerByEmailAndPassword(String email, String password);
 }

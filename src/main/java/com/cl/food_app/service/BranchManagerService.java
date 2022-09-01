@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.cl.food_app.dao.BranchDao;
 import com.cl.food_app.dao.BranchManagerDao;
+import com.cl.food_app.dto.Admin;
 import com.cl.food_app.dto.Branch;
 import com.cl.food_app.dto.BranchManager;
 import com.cl.food_app.exception.BranchManagerNotFoundException;
@@ -40,6 +41,24 @@ public class BranchManagerService {
 		structure.setT(dao.saveBranchManager(branchManager));
 		return new ResponseEntity<ResponseStructure<BranchManager>>(structure, HttpStatus.CREATED);
 	}
+	
+	public ResponseEntity<ResponseStructure<BranchManager>> loginBranchManager(BranchManager branchManager) {
+		branchManager.setPassword(aes.encrypt(branchManager.getPassword(), "secretpratik"));
+		BranchManager branchManager2 = dao.loginBranchManager(branchManager);
+		ResponseStructure<BranchManager> structure = new ResponseStructure<BranchManager>();
+		if (branchManager2 == null) {
+			structure.setMessage("Branch Manager Not Found!!");
+			structure.setStatus(HttpStatus.NOT_FOUND.value());
+			structure.setT(null);
+			return new ResponseEntity<ResponseStructure<BranchManager>>(structure, HttpStatus.NOT_FOUND);
+		} else {
+			branchManager2.setPassword(aes.decrypt(branchManager2.getPassword(), "secretpratik"));
+			structure.setMessage("Branch Manager Logged In Successfully");
+			structure.setStatus(HttpStatus.OK.value());
+			structure.setT(branchManager2);
+			return new ResponseEntity<ResponseStructure<BranchManager>>(structure, HttpStatus.OK);
+		}
+	}
 
 	public ResponseEntity<ResponseStructure<BranchManager>> getBranchManagerById(int id) {
 		Optional<BranchManager> branchManager = dao.getBranchManagerById(id);
@@ -59,7 +78,7 @@ public class BranchManagerService {
 		BranchManager branchManager2 = dao.updateBranchManager(branchManager, id);
 		if (branchManager2 != null) {
 			branchManager2.setPassword(aes.encrypt(branchManager.getPassword(), "secretpratik"));
-			structure.setMessage("Admin Updated Successfully");
+			structure.setMessage("Branch Manager Updated Successfully");
 			structure.setStatus(HttpStatus.OK.value());
 			structure.setT(dao.saveBranchManager(branchManager2));
 			return new ResponseEntity<ResponseStructure<BranchManager>>(structure, HttpStatus.OK);
@@ -72,7 +91,7 @@ public class BranchManagerService {
 		ResponseStructure<BranchManager> structure = new ResponseStructure<BranchManager>();
 		Optional<BranchManager> branchManager = dao.getBranchManagerById(id);
 		if (branchManager.isPresent()) {
-			structure.setMessage("Branch Deleted Successfully");
+			structure.setMessage("Branch Manager Deleted Successfully");
 			structure.setStatus(HttpStatus.OK.value());
 			structure.setT(dao.deleteBranchManager(id));
 			return new ResponseEntity<ResponseStructure<BranchManager>>(structure, HttpStatus.OK);
@@ -83,7 +102,7 @@ public class BranchManagerService {
 
 	public ResponseEntity<ResponseStructure<List<BranchManager>>> findAllBranchManager() {
 		ResponseStructure<List<BranchManager>> structure = new ResponseStructure<List<BranchManager>>();
-		structure.setMessage("Branch Found Successfully");
+		structure.setMessage("Branch Manager Found Successfully");
 		structure.setStatus(HttpStatus.OK.value());
 		structure.setT(dao.findAllBranchManager());
 		return new ResponseEntity<ResponseStructure<List<BranchManager>>>(structure, HttpStatus.OK);

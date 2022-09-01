@@ -20,6 +20,11 @@ public class AdminDao {
 		return repository.save(admin);
 	}
 
+	// Login
+	public Admin loginAdmin(Admin admin) {
+		return repository.findAdminByEmailAndPassword(admin.getEmail(),admin.getPassword());
+	}
+
 	// Update
 	public Admin updateAdmin(Admin admin, int id) {
 		if (repository.findById(id).isEmpty()) {

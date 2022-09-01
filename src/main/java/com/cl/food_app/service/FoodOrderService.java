@@ -102,7 +102,7 @@ public class FoodOrderService {
 			}
 			foodOrder2.setItems(items);
 			foodOrder2.setTotalPrice(totalPrice);
-			structure.setMessage("Item Updated Successfully");
+			structure.setMessage("Food Order Updated Successfully");
 			structure.setStatus(HttpStatus.OK.value());
 			structure.setT(dao.updateFoodOrder(foodOrder2,id));
 			return new ResponseEntity<ResponseStructure<FoodOrder>>(structure, HttpStatus.OK);

@@ -39,6 +39,24 @@ public class StaffService {
 		structure.setT(dao.saveStaff(staff));
 		return new ResponseEntity<ResponseStructure<Staff>>(structure, HttpStatus.CREATED);
 	}
+	
+	public ResponseEntity<ResponseStructure<Staff>> loginStaff(Staff staff) {
+		staff.setPassword(aes.encrypt(staff.getPassword(), "secretpratik"));
+		Staff staff2 = dao.loginStaff(staff);
+		ResponseStructure<Staff> structure = new ResponseStructure<Staff>();
+		if (staff2 == null) {
+			structure.setMessage("Staff Not Found!!");
+			structure.setStatus(HttpStatus.NOT_FOUND.value());
+			structure.setT(null);
+			return new ResponseEntity<ResponseStructure<Staff>>(structure, HttpStatus.NOT_FOUND);
+		} else {
+			staff2.setPassword(aes.decrypt(staff2.getPassword(), "secretpratik"));
+			structure.setMessage("Staff Logged In Successfully");
+			structure.setStatus(HttpStatus.OK.value());
+			structure.setT(staff2);
+			return new ResponseEntity<ResponseStructure<Staff>>(structure, HttpStatus.OK);
+		}
+	}
 
 	public ResponseEntity<ResponseStructure<Staff>> getStaffById(int id) {
 		Optional<Staff> staff = dao.getStaffById(id);
@@ -82,7 +100,7 @@ public class StaffService {
 
 	public ResponseEntity<ResponseStructure<List<Staff>>> findAllStaff() {
 		ResponseStructure<List<Staff>> structure = new ResponseStructure<List<Staff>>();
-		structure.setMessage("Branch Found Successfully");
+		structure.setMessage("Staff Found Successfully");
 		structure.setStatus(HttpStatus.OK.value());
 		structure.setT(dao.findAllStaff());
 		return new ResponseEntity<ResponseStructure<List<Staff>>>(structure, HttpStatus.OK);
